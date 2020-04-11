@@ -3,6 +3,11 @@ const HIT = '0';
 const BLOCKED = '-';
 const SUNK = 'X';
 
+const Battleship = require('../models/ships/Battleship')
+const Cruiser = require('../models/ships/Cruiser')
+const Destroyer = require('../models/ships/Destroyer')
+const Submarine = require('../models/ships/Submarine')
+
 const mongoose = require('mongoose')
 
 const gameSchema = mongoose.Schema({
@@ -10,17 +15,32 @@ const gameSchema = mongoose.Schema({
         type: mongoose.Schema.Types.Mixed,
         required:true
     }],
+    ships:{
+        type: mongoose.Schema.Types.Mixed
+    },
     status:{
         type:String, // pending,running,default
         default:'pending'
     }
 })
 
-
 class BattleshipGame{
     constructor() {
         this.grid = [];
         this.initGrid();
+        this.initGrid();
+        this.all_ships = {
+            battleship:[],
+            cruiser:[],
+            destroyer:[],
+            submarine:[]
+        }
+        this.remaining_ships = {
+            battleship:1,
+            cruiser:2,
+            destroyer:3,
+            submarine:4
+        }
         // Save to DB
         let obj = {
             grid:this.grid,
@@ -51,6 +71,11 @@ class BattleshipGame{
             str +='\n';
         }
         return str;
+    }
+
+    static gameValid(game){
+        if(!game)
+            throw new Error('Game not initialized yet!')
     }
 }
 
