@@ -1,0 +1,24 @@
+{
+    "name": "BATTLESHIP",
+    "version": "1.0.0",
+    "description": "Battleship node REST - PB",
+    "main": "app.js",
+    "scripts": {
+        "start": "nodemon app.js",
+        "test": "mocha --recursive --exit"
+    },
+    "author": "Pranjal Batra",
+    "license": "ISC",
+    "dependencies": {
+        "body-parser": "^1.19.0",
+        "chai": "^4.2.0",
+        "chai-http": "^4.3.0",
+        "cors": "^2.8.5",
+        "dotenv": "^8.2.0",
+        "env-cmd": "^10.0.1",
+        "express": "^4.17.1",
+        "mocha": "^7.1.1",
+        "mongoose": "^5.9.7",
+        "nodemon": "^1.19.3"
+    }
+}
