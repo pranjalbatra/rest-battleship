@@ -64,3 +64,18 @@ router.post('/api/status', (req, res) => {
         res.status(400).send({response})
     }
 })
+
+/*
+* Attack
+*/
+router.post('/api/attack', (req, res) => {
+    try {
+        Game.gameValid(game)
+        var data = req.body;
+        var response = game.attack(data.square);
+        res.status(200).send({response})
+    } catch (error) {
+        const response = ErrorHandler.getErrorResponse(error)
+        res.status(400).send({response})
+    }
+})

@@ -18,8 +18,16 @@ const gameSchema = mongoose.Schema({
     ships:{
         type: mongoose.Schema.Types.Mixed
     },
+    moves:{
+        type:Number,
+        default:0
+    },
+    misses:{
+        type:Number,
+        default:0
+    },
     status:{
-        type:String, // pending,running,default
+        type:String, // pending - while board is being set up,running - when board is set up,finished - when attacker wins
         default:'pending'
     }
 })
@@ -27,6 +35,9 @@ const gameSchema = mongoose.Schema({
 class BattleshipGame{
     constructor() {
         this.ALL_SHIPS_PLACED = 0; // SET to 1 when all ships are placed
+        this.TOTAL_MOVES = 0;
+        this.TOTAL_MISSES = 0;
+        this.GAME_OVER = 0;
         this.grid = [];
         this.initGrid();
         this.initGrid();
@@ -244,6 +255,82 @@ class BattleshipGame{
             ships:this.all_ships
         }
         return obj
+    }
+
+    attack(square){
+        if(this.ALL_SHIPS_PLACED == 0)
+            throw new Error('All the Ships not placed yet!')
+        if(this.GAME_OVER == 1)
+            throw new Error('Game has finished!')
+        if(!square)
+            throw new Error('Missing square value!')
+        square = square.toUpperCase();
+        let coords = this.getCoords(square);
+        var output = '';
+        this.TOTAL_MOVES++;
+        let i = this.grid[coords.i][coords.j]._ship_index;
+        let t = this.grid[coords.i][coords.j]._ship_type
+        if(i != -1 && t != ''){
+            // if already hit this spot
+            if(this.grid[coords.i][coords.j]._val == HIT || this.grid[coords.i][coords.j]._val == SUNK){
+                output = 'You have already attacked here!';
+            }
+            this.grid[coords.i][coords.j]._val = HIT;
+            this.all_ships[t][i].addHit(square);
+            // check if all hit then sink the ship
+            let _hits = this.all_ships[t][i]._hits;
+            let _squares = this.all_ships[t][i]._squares;
+            let sunk = 1;
+            for(let i = 0; i < _squares.length; i++){
+                if(!_hits.includes(_squares[i])){
+                    sunk = 0;
+                    break;
+                }
+            }
+            if(sunk == 1){
+                this.all_ships[t][i].changeStatus('sunk');
+                for(let i = 0; i < _squares.length; i++){
+                    let co = this.getCoords(_squares[i]);
+                    this.grid[co.i][co.j]._val = SUNK;
+                }
+                //Check if all ships have sunk
+                let allSunk = 1;
+                var self = this;
+                Object.keys(this.all_ships).map(function(key, index) {
+                    let arr = self.all_ships[key];
+                    let len = arr.length; 
+                    for(var i = 0; i < len; i++){
+                        if(arr[i]._status != 'sunk'){
+                            allSunk = 0;
+                            break;
+                        }
+                    }
+                });
+                if(allSunk == 1){
+                    this.GAME_OVER = 0; 
+                    output = `Win! You have completed the game in ${this.TOTAL_MOVES} moves. You missed ${this.TOTAL_MISSES} shots.`
+                }else{
+                    output = `You just sank a ${t}`;
+                }
+            }else{
+                output = `Hit`;
+            }
+        }else{
+            this.TOTAL_MISSES++;
+            output = `Miss`;
+        }
+
+        this.dbObj.ships = {};
+        this.dbObj.grid = [];
+        this.dbObj.ships = JSON.parse(JSON.stringify(this.all_ships));
+        this.dbObj.grid = JSON.parse(JSON.stringify(this.grid));
+        this.moves = this.TOTAL_MOVES;
+        this.misses = this.TOTAL_MISSES;
+        if(this.GAME_OVER){
+            this.dbObj.status = 'finished';
+        }
+        this.dbObj.save();
+        return output;
     }
 }
 
