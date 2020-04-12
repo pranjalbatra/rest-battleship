@@ -27,10 +27,14 @@ Note: All APIs are POST APIs
 
 2. URL: /api/placeShip - Places a single ship on the board. 
     REQUEST: {
-      shipType: 'cruiser', // Contains ship type (battleship, cruiser, destroyer, submarine) - Not case sensitive
-      square:'A1', // Contains square value ( A - J X 1 - 10 ) - Not case sensitive
-      orientation:'vertical' // Must be either horizontal or vertical - Not case sensitive
+      shipType: 'cruiser', 
+      square:'A1', 
+      orientation:'vertical' 
     }
+    
+     `shipType` Contains ship type (battleship, cruiser, destroyer, submarine) - Not case sensitive
+     `square` Contains grid square value ( A - J X 1 - 10 ) - Not case sensitive
+     `orientation` Must be either horizontal or vertical - Not case sensitive
     
 3. URL: /api/attack - To attack on the board. 
     REQUEST: {
