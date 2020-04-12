@@ -21,6 +21,22 @@ router.post('/api/start', (req, res) => {
 })
 
 /*
+* Place a ship on the Grid
+*/
+
+router.post('/api/placeShip', (req, res) => {
+    try {
+        Game.gameValid(game)
+        var data = req.body;
+        var response = game.placeShip(data.shipType,data.square,data.orientation);
+        res.status(200).send({response})
+    } catch (error) {
+        const response = ErrorHandler.getErrorResponse(error)
+        res.status(400).send({response})
+    }
+})
+
+/*
 * Render the grid 
 */
 router.post('/api/renderGrid', (req, res) => {
