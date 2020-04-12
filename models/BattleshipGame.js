@@ -307,7 +307,7 @@ class BattleshipGame{
                     }
                 });
                 if(allSunk == 1){
-                    this.GAME_OVER = 0; 
+                    this.GAME_OVER = 1; 
                     output = `Win! You have completed the game in ${this.TOTAL_MOVES} moves. You missed ${this.TOTAL_MISSES} shots.`
                 }else{
                     output = `You just sank a ${t}`;
@@ -324,8 +324,8 @@ class BattleshipGame{
         this.dbObj.grid = [];
         this.dbObj.ships = JSON.parse(JSON.stringify(this.all_ships));
         this.dbObj.grid = JSON.parse(JSON.stringify(this.grid));
-        this.moves = this.TOTAL_MOVES;
-        this.misses = this.TOTAL_MISSES;
+        this.dbObj.moves = this.TOTAL_MOVES;
+        this.dbObj.misses = this.TOTAL_MISSES;
         if(this.GAME_OVER){
             this.dbObj.status = 'finished';
         }
