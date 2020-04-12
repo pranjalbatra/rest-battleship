@@ -79,3 +79,5 @@ router.post('/api/attack', (req, res) => {
         res.status(400).send({response})
     }
 })
+
+module.exports = router
