@@ -235,6 +235,16 @@ class BattleshipGame{
         }
         return out;
     }
+
+    getStatus(){
+        let ren = this.renderGrid()
+        let obj = {
+            grid:this.grid,
+            grid_render:ren,
+            ships:this.all_ships
+        }
+        return obj
+    }
 }
 
 const Game = mongoose.model('Game', gameSchema)

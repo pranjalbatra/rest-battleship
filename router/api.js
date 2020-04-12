@@ -49,3 +49,18 @@ router.post('/api/renderGrid', (req, res) => {
         res.status(400).send({response})
     }
 })
+
+/*
+* Get Game Status
+*/
+
+router.post('/api/status', (req, res) => {
+    try {
+        Game.gameValid(game)
+        var response = game.getStatus();
+        res.status(200).send({response})
+    } catch (error) {
+        const response = ErrorHandler.getErrorResponse(error)
+        res.status(400).send({response})
+    }
+})
