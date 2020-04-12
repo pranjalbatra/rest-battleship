@@ -19,7 +19,7 @@ PORT=5000
 MONGO='mongodb://localhost/battleship'
 ```
 
-Note: All APIs are post APIs
+Note: All APIs are POST APIs
 
 ### API Endpoints
 
